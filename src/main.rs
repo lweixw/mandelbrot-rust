@@ -1,10 +1,21 @@
 extern crate rayon;
 
+use anyhow::Result;
+use thiserror::Error;
 use std::io::Write;
 use std::ops::{Add, Mul, Sub};
 use std::sync::Arc;
 
 use rayon::prelude::*;
+
+
+#[derive(Error, Debug)]
+pub enum MandelbrotError {
+    #[error("unexpected error")]
+    Unknown(#[from] std::io::Error),
+    #[error("parameter error: {0}")]
+    Param(&'static str)
+}
 
 const MAX_ITER: usize = 50;
 const VLEN: usize = 8;
@@ -68,8 +79,8 @@ pub fn mbrot8(cr: Vecf64, ci: Vecf64) -> u8 {
         .fold(0, |accu, b| accu | b)
 }
 
-fn main() -> Result<(), std::io::Error> {
-    let size = std::env::args().nth(1).and_then(|n| n.parse().ok()).unwrap_or(200);
+fn main() -> Result<()> {
+    let size = get_size()?;
     let size = size / VLEN * VLEN;
     let inv = 2. / size as f64;
     let mut xloc = vec![ZEROS; size / VLEN];
@@ -92,4 +103,12 @@ fn main() -> Result<(), std::io::Error> {
     }
 
     Ok(())
+}
+
+fn get_size() -> Result<usize, MandelbrotError> {
+    let size = std::env::args().nth(1)
+        .and_then(|n| n.parse().ok())
+        .ok_or(MandelbrotError::Param("Not a valid positive number!"))?;
+
+    Ok(size)
 }
