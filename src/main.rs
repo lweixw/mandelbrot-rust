@@ -103,7 +103,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn get_size() -> Result<usize, MandelbrotError> {
+fn get_size() -> Result<usize> {
     let size = std::env::args().nth(1)
         .and_then(|n| n.parse().ok())
         .ok_or(MandelbrotError::Param("Not a valid positive number!"))?;
