@@ -3,6 +3,7 @@ extern crate rayon;
 use std::io::Write;
 use std::ops::{Add, Mul, Sub};
 use std::sync::Arc;
+
 use rayon::prelude::*;
 
 const MAX_ITER: usize = 50;
@@ -20,6 +21,7 @@ macro_rules! for_vec {
 
 #[derive(Clone, Copy)]
 pub struct Vecf64([f64; VLEN]);
+
 impl Mul for Vecf64 {
     type Output = Vecf64;
     fn mul(mut self, other: Vecf64) -> Vecf64 {
@@ -27,6 +29,7 @@ impl Mul for Vecf64 {
         self
     }
 }
+
 impl Add for Vecf64 {
     type Output = Vecf64;
     fn add(mut self, other: Vecf64) -> Vecf64 {
@@ -34,6 +37,7 @@ impl Add for Vecf64 {
         self
     }
 }
+
 impl Sub for Vecf64 {
     type Output = Vecf64;
     fn sub(mut self, other: Vecf64) -> Vecf64 {
@@ -64,7 +68,7 @@ pub fn mbrot8(cr: Vecf64, ci: Vecf64) -> u8 {
         .fold(0, |accu, b| accu | b)
 }
 
-fn main() {
+fn main() -> Result<(), std::io::Error> {
     let size = std::env::args().nth(1).and_then(|n| n.parse().ok()).unwrap_or(200);
     let size = size / VLEN * VLEN;
     let inv = 2. / size as f64;
@@ -84,6 +88,8 @@ fn main() {
     let stdout_unlocked = std::io::stdout();
     let mut stdout = stdout_unlocked.lock();
     for row in rows {
-        stdout.write_all(&row).unwrap();
+        stdout.write_all(&row)?;
     }
+
+    Ok(())
 }
