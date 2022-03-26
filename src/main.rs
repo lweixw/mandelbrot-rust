@@ -73,7 +73,6 @@ fn main() {
         xloc[i / VLEN].0[i % VLEN] = i as f64 * inv - 1.5;
     }
     let xloc = Arc::new(xloc);
-    // let pool = CpuPool::new_num_cpus();
 
     let rows: Vec<Vec<u8>> = (0..size).into_par_iter().map(|y| {
         let xloc = xloc.clone();
