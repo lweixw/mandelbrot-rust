@@ -1,5 +1,3 @@
-extern crate rayon;
-
 use anyhow::Result;
 use thiserror::Error;
 use std::io::Write;
