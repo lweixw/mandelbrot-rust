@@ -34,5 +34,6 @@ time ./target/release/mandelbrot 32000 > output.jpeg
 ### Intel "Coffee Lake" 1.7 GHz Intel "Core i7" processor (I7-8557U)
 
 ```shell
-
+time ./target/release/mandelbrot 32000 > output.jpeg
+./target/release/mandelbrot 32000 > output.jpeg  20.82s user 0.24s system 731% cpu 2.877 total
 ```
